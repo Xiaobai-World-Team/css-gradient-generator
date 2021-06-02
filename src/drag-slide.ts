@@ -78,7 +78,7 @@ export function useColors(selector: string) {
                 startX: _initPoint.left,
             };
 
-            let controlNode = <HTMLLabelElement>document.querySelector(`#${selector} .control`)
+            let controlNode = <HTMLDivElement>document.querySelector(`#${selector} .control`)
 
             if (!controlNode) {
                 return

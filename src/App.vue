@@ -8,15 +8,17 @@
     }"
    ></div>
    <div class="gradient-slide">
-    <label
+    <div
      class="slide"
      :style="{ left: slide.percentage + '%' }"
      v-for="slide in colors"
      :id="slide.id"
      :key="slide.id"
     >
-     <input type="color" v-model="slide.rgba" />
-    </label>
+     <label :style="{ background: slide.rgba }">
+      <input type="color" v-model="slide.rgba" />
+     </label>
+    </div>
    </div>
   </div>
   <div class="demo">
@@ -71,22 +73,38 @@ export default defineComponent({
   > .gradient {
    height: 80px;
    border: solid 1px #000;
+   border-radius: 1em;
   }
   > .gradient-slide {
    position: relative;
    > .slide {
     position: absolute;
     top: 0;
-    width: 18px;
-    height: 80px;
-    border: solid 1px red;
-    background: #aaa;
+    width: 16px;
+    height: 36px;
+    background: #555;
+    box-shadow:inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
+    border-radius: 5px;
     transform: translateX(-50%);
+    > label {
+     position: absolute;
+     left: -2px;
+     top: -10px;
+     width: 20px;
+     height: 20px;
+     overflow: hidden;
+     border-radius: 50%;
+     box-shadow: 0 0 0 1px #fff, 0 0 0 2px #000;
+     input {
+      opacity: 0;
+     }
+    }
    }
   }
  }
  > .demo {
   flex: 1 1 0;
+  overflow: hidden;
  }
 }
 </style>
