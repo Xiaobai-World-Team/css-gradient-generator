@@ -11,17 +11,18 @@
     <div
      class="slide"
      :style="{ left: slide.percentage + '%' }"
-     v-for="slide in colors"
+     v-for="(slide, idx) in colors"
      :id="slide.id"
      :key="slide.id"
     >
-     <label :style="{ background: slide.rgba }">
-      <input type="color" v-model="slide.rgba" />
+     <label :style="{ background: `rgb(${slide.r}, ${slide.g}, ${slide.b})` }">
+      <rgbaInput type="color" v-model="colors[idx]" />
      </label>
     </div>
    </div>
   </div>
   <div class="demo">
+   <pre>{{ colors }}</pre>
    <pre>{{ css }}</pre>
   </div>
  </div>
@@ -30,8 +31,13 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useColors } from "./drag-slide";
+import rgbaInput from "./rgba-input.vue";
+
 export default defineComponent({
  name: "App",
+ components: {
+  rgbaInput,
+ },
  setup() {
   const rootNodeId = `gradient${Math.random().toString(36).substring(2)}`;
   const colors = useColors(rootNodeId);
@@ -42,9 +48,10 @@ export default defineComponent({
      return a.percentage - b.percentage;
     })
     .map((item) => {
-     return `${item.rgba} ${item.percentage}%`;
+     return `rgba(${item.r},${item.g},${item.b},${item.a}) ${item.percentage}%`;
     })
     .join(",");
+
    return `linear-gradient(90deg, ${css})`;
   });
   return {
@@ -83,7 +90,7 @@ export default defineComponent({
     width: 16px;
     height: 36px;
     background: #555;
-    box-shadow:inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
+    box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
     border-radius: 5px;
     transform: translateX(-50%);
     > label {

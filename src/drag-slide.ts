@@ -1,9 +1,12 @@
 import { ref } from "@vue/reactivity";
 
 /** color part of gradient */
-interface color {
+export interface Color {
     id: string;
-    rgba: string;
+    r: number;
+    g: number;
+    b: number;
+    a: number;
     /** percentage */
     percentage: number;
 }
@@ -14,20 +17,29 @@ function preventDefault(ev: Event) {
 }
 
 export function useColors(selector: string) {
-    const colors = ref<color[]>([
+    const colors = ref<Color[]>([
         {
             id: Math.random().toString(36).substring(2),
-            rgba: "#ff00aa",
+            r: 255,
+            g: 100,
+            b: 11,
+            a: 1,
             percentage: 50,
         },
         {
             id: Math.random().toString(36).substring(2),
-            rgba: "#aabbcc",
+            r: 11,
+            g: 22,
+            b: 33,
+            a: 1,
             percentage: 10,
         },
         {
             id: Math.random().toString(36).substring(2),
-            rgba: "#ff0000",
+            r: 55,
+            g: 255,
+            b: 0,
+            a: 1,
             percentage: 30,
         },
     ]);
@@ -93,7 +105,7 @@ export function useColors(selector: string) {
                 if (percentage > 100) {
                     percentage = 100
                 }
-                color.percentage = percentage
+                color.percentage = parseFloat(percentage.toFixed(0))
             }
             document.addEventListener("mousemove", mousemove);
 
