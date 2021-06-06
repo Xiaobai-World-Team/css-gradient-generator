@@ -105,7 +105,11 @@ export function useColors(selector: string) {
                 if (percentage > 100) {
                     percentage = 100
                 }
-                color.percentage = parseFloat(percentage.toFixed(0))
+                if (ev.metaKey || ev.shiftKey || ev.ctrlKey || ev.altKey) {
+                    color.percentage = parseFloat(percentage.toFixed(2))
+                } else {
+                    color.percentage = parseFloat(percentage.toFixed(0))
+                }
             }
             document.addEventListener("mousemove", mousemove);
 
