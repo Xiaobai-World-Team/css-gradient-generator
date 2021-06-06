@@ -9,8 +9,8 @@ export interface Color {
     a: number;
     /** percentage */
     percentage: number;
+    selected: boolean
 }
-
 
 function preventDefault(ev: Event) {
     ev.preventDefault();
@@ -25,6 +25,7 @@ export function useColors(selector: string) {
             b: 11,
             a: 1,
             percentage: 50,
+            selected: false,
         },
         {
             id: Math.random().toString(36).substring(2),
@@ -33,6 +34,7 @@ export function useColors(selector: string) {
             b: 33,
             a: 1,
             percentage: 10,
+            selected: false,
         },
         {
             id: Math.random().toString(36).substring(2),
@@ -41,25 +43,36 @@ export function useColors(selector: string) {
             b: 0,
             a: 1,
             percentage: 30,
+            selected: false,
         },
     ]);
 
+
     /**
-     * resize and scale
+     * change slide
      */
     document.addEventListener("mousedown", function (ev) {
         if (ev.target === null) {
             return;
         }
 
-        const target: HTMLDivElement = <HTMLDivElement>ev.target;
+        const target: Element = <Element>ev.target;
+
         const action = target.className.indexOf('slide')
 
         if (action < 0) {
+            let node = <Element>target;
+            while (Array.from(node.classList).indexOf('slide') < 0) {
+                node = <Element>node.parentNode
+                if (node.nodeName === 'BODY') {
+                    colors.value.forEach(c => c.selected = false)
+                    break
+                }
+            }
+
             return;
         }
 
-        console.log(target)
         ev.preventDefault();
         ev.stopPropagation();
 
@@ -69,9 +82,10 @@ export function useColors(selector: string) {
             return item.id === id;
         });
 
-        console.log(colorIdx)
-
         const color = colors.value[colorIdx];
+
+        colors.value.forEach(color => color.selected = false)
+        colors.value[colorIdx].selected = true
 
         // save init point
         var _initPoint = {

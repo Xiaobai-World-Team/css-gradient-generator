@@ -10,6 +10,9 @@
    <div class="gradient-slide">
     <div
      class="slide"
+     :class="{
+      selected: slide.selected,
+     }"
      :style="{ left: slide.percentage + '%' }"
      v-for="(slide, idx) in colors"
      :id="slide.id"
@@ -18,6 +21,14 @@
      <label :style="{ background: `rgb(${slide.r}, ${slide.g}, ${slide.b})` }">
       <rgbaInput type="color" v-model="colors[idx]" />
      </label>
+     <input
+      v-show="slide.selected"
+      step="0.01"
+      type="range"
+      min="0"
+      max="1"
+      v-model.number="colors[idx].a"
+     />
     </div>
    </div>
   </div>
@@ -54,6 +65,7 @@ export default defineComponent({
 
    return `linear-gradient(90deg, ${css})`;
   });
+
   return {
    rootNodeId,
    colors,
@@ -89,10 +101,17 @@ export default defineComponent({
     top: 0;
     width: 16px;
     height: 36px;
+    margin-left: -8px;
     background: #555;
     box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
     border-radius: 5px;
-    transform: translateX(-50%);
+    transition: transform 0.2s;
+    transform-origin: center center;
+    cursor: ew-resize;
+    &.selected {
+     transform: scale(1.5);
+     transform-origin: center center;
+    }
     > label {
      position: absolute;
      left: -2px;
@@ -105,6 +124,12 @@ export default defineComponent({
      input {
       opacity: 0;
      }
+    }
+    input[type="range"] {
+     position: absolute;
+     left: 0;
+     bottom: -20px;
+     transform: translateX(-50%);
     }
    }
   }
