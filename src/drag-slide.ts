@@ -24,16 +24,7 @@ export function useColors(selector: string) {
             g: 100,
             b: 11,
             a: 1,
-            percentage: 50,
-            selected: false,
-        },
-        {
-            id: Math.random().toString(36).substring(2),
-            r: 11,
-            g: 22,
-            b: 33,
-            a: 1,
-            percentage: 10,
+            percentage: 0,
             selected: false,
         },
         {
@@ -42,7 +33,7 @@ export function useColors(selector: string) {
             g: 255,
             b: 0,
             a: 1,
-            percentage: 30,
+            percentage: 100,
             selected: false,
         },
     ]);
@@ -82,6 +73,10 @@ export function useColors(selector: string) {
             return item.id === id;
         });
 
+        if (colorIdx < 0) {
+            return
+        }
+
         const color = colors.value[colorIdx];
 
         colors.value.forEach(color => color.selected = false)
@@ -93,6 +88,7 @@ export function useColors(selector: string) {
         };
 
         var initX = ev.pageX;
+        var initY = ev.pageY;
 
         bind();
 
@@ -112,6 +108,13 @@ export function useColors(selector: string) {
 
             function mousemove(ev: MouseEvent) {
                 let percentage = point.startX + ((ev.pageX - initX) / controlNode.offsetWidth * 100);
+                let y = ev.pageY - initY
+                if (y > 60) {
+                    colors.value.splice(colorIdx, 1)
+                    mouseup()
+                    console.log('清空')
+                    return
+                }
 
                 if (percentage < 0) {
                     percentage = 0

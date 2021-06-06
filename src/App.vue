@@ -7,7 +7,7 @@
      background: css,
     }"
    ></div>
-   <div class="gradient-slide">
+   <div class="gradient-slide" ref="gradientSlide">
     <div
      class="slide"
      :class="{
@@ -32,15 +32,15 @@
     </div>
    </div>
   </div>
-  <div class="demo">
-   <pre>{{ colors }}</pre>
+  <div class="demo" @click="copy">
+   <div class="copied" v-if="copied">{{ copiedText }}</div>
    <pre>{{ css }}</pre>
   </div>
  </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useColors } from "./drag-slide";
 import rgbaInput from "./rgba-input.vue";
 
@@ -54,7 +54,7 @@ export default defineComponent({
   const colors = useColors(rootNodeId);
 
   const css = computed(() => {
-   let css = colors.value
+   let css = Array.from(colors.value)
     .sort((a, b) => {
      return a.percentage - b.percentage;
     })
@@ -66,11 +66,44 @@ export default defineComponent({
    return `linear-gradient(90deg, ${css})`;
   });
 
+  const copiedText = ref("copied!");
+  const copied = ref(false);
+
+  watch(css, () => {
+   copied.value = false;
+  });
+
+  const copy = () => {
+   navigator.clipboard.writeText(css.value);
+   copied.value = true;
+  };
+
   return {
    rootNodeId,
    colors,
    css,
+   copy,
+   copied,
+   copiedText,
   };
+ },
+ mounted() {
+  let node = <HTMLDivElement>this.$refs.gradientSlide;
+  node.addEventListener("click", (ev: MouseEvent) => {
+   if (ev.target !== node) {
+    return;
+   }
+   this.colors.forEach((c) => (c.selected = false));
+   this.colors.push({
+    id: Math.random().toString(36),
+    r: parseInt((Math.random() * 255).toString(), 10),
+    g: parseInt((Math.random() * 255).toString(), 10),
+    b: parseInt((Math.random() * 255).toString(), 10),
+    a: 1,
+    percentage: parseFloat(((ev.offsetX / node.offsetWidth) * 100).toFixed(2)),
+    selected: true,
+   });
+  });
  },
 });
 </script>
@@ -80,6 +113,7 @@ export default defineComponent({
  width: 100%;
  height: 100%;
  display: flex;
+ flex-direction: column;
  flex: 1 1 0;
  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
   Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -96,6 +130,8 @@ export default defineComponent({
   }
   > .gradient-slide {
    position: relative;
+   height: 50px;
+   cursor: copy;
    > .slide {
     position: absolute;
     top: 0;
@@ -135,8 +171,21 @@ export default defineComponent({
   }
  }
  > .demo {
-  flex: 1 1 0;
-  overflow: hidden;
+  background: #555;
+  color: #fff;
+  padding: 1em;
+  margin-top: 2em;
+  border-radius: 0.2em;
+  pre {
+   font-size: 140%;
+   white-space: pre-wrap;
+   line-height: 150%;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+  .copied {
+   color: greenyellow;
+  }
  }
 }
 </style>
