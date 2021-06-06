@@ -109,10 +109,9 @@ export function useColors(selector: string) {
             function mousemove(ev: MouseEvent) {
                 let percentage = point.startX + ((ev.pageX - initX) / controlNode.offsetWidth * 100);
                 let y = ev.pageY - initY
-                if (y > 60) {
+                if (y > 60 && colors.value.length > 2) {
                     colors.value.splice(colorIdx, 1)
                     mouseup()
-                    console.log('清空')
                     return
                 }
 

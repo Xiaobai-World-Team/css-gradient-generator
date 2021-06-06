@@ -1,12 +1,14 @@
 <template>
  <div class="css-gradient-wrapper" :id="rootNodeId">
   <div class="control">
-   <div
-    class="gradient"
-    :style="{
-     background: css,
-    }"
-   ></div>
+   <div class="gradient-wrapper">
+    <div
+     class="gradient"
+     :style="{
+      background: css,
+     }"
+    ></div>
+   </div>
    <div class="gradient-slide" ref="gradientSlide">
     <div
      class="slide"
@@ -115,73 +117,87 @@ export default defineComponent({
  display: flex;
  flex-direction: column;
  flex: 1 1 0;
+ padding: 1em 3em;
+ box-sizing: border-box;
  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
   Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
  * {
   box-sizing: border-box;
  }
  > .control {
-  flex: 1 1 0;
   position: relative;
-  > .gradient {
-   height: 80px;
-   border: solid 1px #000;
-   border-radius: 1em;
+
+  > .gradient-wrapper {
+   background-image: linear-gradient(
+     90deg,
+     rgba(0, 0, 0, 0.1) 50%,
+     transparent 0
+    ),
+    linear-gradient(rgba(0, 0, 0, 0.1) 50%, transparent 0);
+   background-size: 18px 18px;
+   border-radius: 0.5em;
+   .gradient {
+    border-radius: 0.5em;
+    height: 80px;
+   }
   }
-  > .gradient-slide {
-   position: relative;
-   height: 50px;
-   cursor: copy;
-   > .slide {
-    position: absolute;
-    top: 0;
-    width: 16px;
-    height: 36px;
-    margin-left: -8px;
-    background: #555;
-    box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
-    border-radius: 5px;
-    transition: transform 0.2s;
+ }
+
+ .gradient-slide {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  cursor: copy;
+
+  > .slide {
+   position: absolute;
+   top: 0;
+   width: 16px;
+   height: 36px;
+   margin-left: -8px;
+   background: #555;
+   box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
+   border-radius: 5px;
+   transition: transform 0.2s;
+   transform-origin: center center;
+   cursor: ew-resize;
+   &.selected {
+    transform: scale(1.5);
     transform-origin: center center;
-    cursor: ew-resize;
-    &.selected {
-     transform: scale(1.5);
-     transform-origin: center center;
+   }
+   > label {
+    position: absolute;
+    left: -2px;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #fff, 0 0 0 2px #000;
+    input {
+     opacity: 0;
     }
-    > label {
-     position: absolute;
-     left: -2px;
-     top: -10px;
-     width: 20px;
-     height: 20px;
-     overflow: hidden;
-     border-radius: 50%;
-     box-shadow: 0 0 0 1px #fff, 0 0 0 2px #000;
-     input {
-      opacity: 0;
-     }
-    }
-    input[type="range"] {
-     position: absolute;
-     left: 0;
-     bottom: -20px;
-     transform: translateX(-50%);
-    }
+   }
+   input[type="range"] {
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    transform: translateX(-50%);
    }
   }
  }
  > .demo {
-  background: #555;
-  color: #fff;
+  background: #333;
+  color: rgb(199, 249, 252);
   padding: 1em;
-  margin-top: 2em;
-  border-radius: 0.2em;
+  margin-top: 3em;
+  border-radius: 1em;
+  cursor: copy;
   pre {
-   font-size: 140%;
    white-space: pre-wrap;
-   line-height: 150%;
-   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+   line-height: 160%;
+   letter-spacing: 1px;
   }
   .copied {
    color: greenyellow;
